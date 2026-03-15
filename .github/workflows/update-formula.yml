@@ -1,0 +1,64 @@
+name: Update Homebrew Formula
+
+on:
+  repository_dispatch:
+    types: [new-release]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Release version (e.g. v0.1.0)"
+        required: true
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch checksums
+        id: checksums
+        run: |
+          VERSION="${{ github.event.inputs.version || github.event.client_payload.version }}"
+          BASE="https://github.com/jd4rider/billy-app/releases/download/${VERSION}"
+          
+          fetch_sha() {
+            curl -fsSL "$1" | sha256sum | awk '{print $1}'
+          }
+          
+          echo "darwin_arm64=$(fetch_sha ${BASE}/billy_darwin_arm64.tar.gz)" >> $GITHUB_OUTPUT
+          echo "darwin_amd64=$(fetch_sha ${BASE}/billy_darwin_amd64.tar.gz)" >> $GITHUB_OUTPUT
+          echo "linux_arm64=$(fetch_sha ${BASE}/billy_linux_arm64.tar.gz)"   >> $GITHUB_OUTPUT
+          echo "linux_amd64=$(fetch_sha ${BASE}/billy_linux_amd64.tar.gz)"   >> $GITHUB_OUTPUT
+          echo "version=${VERSION#v}" >> $GITHUB_OUTPUT
+
+      - name: Update formula
+        run: |
+          VERSION="${{ steps.checksums.outputs.version }}"
+          sed -i "s/version \".*\"/version \"${VERSION}\"/" Formula/billy.rb
+          
+          # Update SHA256 for each arch (matched by adjacent url line context)
+          python3 << 'PYEOF'
+          import re, os
+          
+          content = open("Formula/billy.rb").read()
+          shas = {
+            "darwin_arm64": "${{ steps.checksums.outputs.darwin_arm64 }}",
+            "darwin_amd64": "${{ steps.checksums.outputs.darwin_amd64 }}",
+            "linux_arm64":  "${{ steps.checksums.outputs.linux_arm64 }}",
+            "linux_amd64":  "${{ steps.checksums.outputs.linux_amd64 }}",
+          }
+          for arch, sha in shas.items():
+            os_name, cpu = arch.split("_", 1)
+            pattern = rf'(url "https://github\.com/jd4rider/billy-app/releases/download/v[^"]+/billy_{arch}\.tar\.gz"\n\s+sha256 ")[a-f0-9]{{64}}(")'
+            content = re.sub(pattern, rf'\g<1>{sha}\g<2>', content)
+          open("Formula/billy.rb", "w").write(content)
+          print("Formula updated")
+          PYEOF
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add Formula/billy.rb
+          git diff --staged --quiet || git commit -m "chore: update formula to v${{ steps.checksums.outputs.version }}"
+          git push
