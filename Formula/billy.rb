@@ -10,20 +10,20 @@ class Billy < Formula
   on_macos do
     if Hardware::CPU.arm?
       url "https://github.com/jd4rider/billy-app/releases/download/v#{version}/billy_darwin_arm64.tar.gz"
-      sha256 "0000000000000000000000000000000000000000000000000000000000000000"
+      sha256 "a946194eecf381e8752acb614544f5651c7bb000fc76029004274f16e2f7dba2"
     else
       url "https://github.com/jd4rider/billy-app/releases/download/v#{version}/billy_darwin_amd64.tar.gz"
-      sha256 "0000000000000000000000000000000000000000000000000000000000000000"
+      sha256 "07e88f87e032c205b6428accf97f473c45cb4f3b7520c5b24ce9e674fbcaeaf8"
     end
   end
 
   on_linux do
     if Hardware::CPU.arm?
       url "https://github.com/jd4rider/billy-app/releases/download/v#{version}/billy_linux_arm64.tar.gz"
-      sha256 "0000000000000000000000000000000000000000000000000000000000000000"
+      sha256 "c2b281b22929636eb453f9160cad20def6740c02d45a20e32e519ab847c929f5"
     else
       url "https://github.com/jd4rider/billy-app/releases/download/v#{version}/billy_linux_amd64.tar.gz"
-      sha256 "0000000000000000000000000000000000000000000000000000000000000000"
+      sha256 "6dbf7072795d11649bba68e6ed0613d4777dd7299769e6f5f726293977be21db"
     end
   end
 
@@ -39,8 +39,8 @@ class Billy < Formula
       Or install Billy Full (Ollama bundled):
         curl -fsSL https://raw.githubusercontent.com/jd4rider/billy-app/main/scripts/install.sh | bash -s -- --full
 
-      After installing Ollama, pull a model to get started:
-        ollama pull mistral
+      After installing Ollama, pull Billy's default model:
+        ollama pull qwen2.5-coder:7b
 
       Then run:
         billy
