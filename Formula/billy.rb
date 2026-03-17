@@ -5,21 +5,21 @@
 class Billy < Formula
   desc "Local AI coding assistant powered by Ollama. No subscription required."
   homepage "https://github.com/jd4rider/billy-app"
-  version "0.1.1-alpha"
+  version "0.1.2-alpha"
   license "MIT"
 
   on_macos do
     if Hardware::CPU.intel?
-      url "https://github.com/jd4rider/billy-app/releases/download/v0.1.1-alpha/billy_darwin_amd64.tar.gz"
-      sha256 "74758332ba3e829efe898bedb13ccf4521a9ce7afaf9853474287e08cffb183e"
+      url "https://github.com/jd4rider/billy-app/releases/download/v0.1.2-alpha/billy_darwin_amd64.tar.gz"
+      sha256 "d80392eabf1828af3ab074a08cb01152b2e93fe0627dfbef2b3e51406cab6747"
 
       define_method(:install) do
         bin.install "billy"
       end
     end
     if Hardware::CPU.arm?
-      url "https://github.com/jd4rider/billy-app/releases/download/v0.1.1-alpha/billy_darwin_arm64.tar.gz"
-      sha256 "e3ed9c1ccb925ba576f81172db5fd4f9e54ce5325f24375457d06ffb5cf791d6"
+      url "https://github.com/jd4rider/billy-app/releases/download/v0.1.2-alpha/billy_darwin_arm64.tar.gz"
+      sha256 "9a32a424f95c855ea908c56a7ef61918aa18a768e33f26866f9b68a8eef51287"
 
       define_method(:install) do
         bin.install "billy"
@@ -29,15 +29,15 @@ class Billy < Formula
 
   on_linux do
     if Hardware::CPU.intel? && Hardware::CPU.is_64_bit?
-      url "https://github.com/jd4rider/billy-app/releases/download/v0.1.1-alpha/billy_linux_amd64.tar.gz"
-      sha256 "6b2b29e738e56058796f600b9fcc14bcccb3539a74cd975a57ffa8a0e6e474f9"
+      url "https://github.com/jd4rider/billy-app/releases/download/v0.1.2-alpha/billy_linux_amd64.tar.gz"
+      sha256 "af1704c4963d76257b6b3a61f861f5c74140549fef0d651fb41b9011271511c0"
       define_method(:install) do
         bin.install "billy"
       end
     end
     if Hardware::CPU.arm? && Hardware::CPU.is_64_bit?
-      url "https://github.com/jd4rider/billy-app/releases/download/v0.1.1-alpha/billy_linux_arm64.tar.gz"
-      sha256 "ed9ccd3422fd41fff21c099b961fd17c5fdac8a81e68f8914de2cff895a0c009"
+      url "https://github.com/jd4rider/billy-app/releases/download/v0.1.2-alpha/billy_linux_arm64.tar.gz"
+      sha256 "95397eca6eca1cd48363984ff892635a0079b34b834a552a64b500f3fab4dd13"
       define_method(:install) do
         bin.install "billy"
       end
